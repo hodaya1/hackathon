@@ -20,6 +20,7 @@ while 1:
                 raise Exception
             break
         except:
+            time.sleep(1)
             pass    
     print( "Received offer from " +  addr[0] + " attempting to connect...")
 
@@ -65,4 +66,5 @@ while 1:
 
         print("server disconnected, listening for offer request...")
     except:
+        time.sleep(1)
         pass
