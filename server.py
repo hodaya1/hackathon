@@ -44,6 +44,7 @@ while 1: #so the program will run forever
             try:
                 while 1:
                     time.sleep(0.0001)
+                    ch = conn.recv(1)
                     if conn in group_1:
                         lock_1.acquire()
                         global counter_group1
@@ -53,7 +54,7 @@ while 1: #so the program will run forever
                         lock_2.acquire()
                         global counter_group2
                         counter_group2 += 1
-                        lock_2.release()  
+                        lock_2.release()         
             except:
                 time.sleep(1) 
                 pass
@@ -95,10 +96,13 @@ while 1: #so the program will run forever
 
                 messege = "\nWelcome to Keyboard Spamming Battle Royale.\n\nGroup 1:\n==\n"+print_list(group_1,groups)+"\nGroup 2:\n==\n"+print_list(group_2,groups)+"\nStart pressing keys on your keyboard as fast as you can!!\n"
                 for i in range(0,count_conn): #create thread for every connection and start the thread
-                    list_conn[i].send(messege.encode())
-                    thread_for_client = threading.Thread(target=counter_for_group, args=(list_conn[i], group_1, group_2))
-                    threads.append(thread_for_client)
-                    thread_for_client.start()
+                    try:
+                        list_conn[i].send(messege.encode())
+                        thread_for_client = threading.Thread(target=counter_for_group, args=(list_conn[i], group_1, group_2))
+                        threads.append(thread_for_client)
+                        thread_for_client.start()
+                    except:
+                        pass
                 
                 time.sleep(10)
                 #result of the game - winner / loser / tie
@@ -133,4 +137,3 @@ while 1: #so the program will run forever
     except:
         time.sleep(1) 
         pass
-    
