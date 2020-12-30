@@ -15,6 +15,19 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+while 1:
+    time.sleep(0.0001)
+    state_network = input("plese enter 1 if you want eth1 or 2 for eth2\n")
+    if state_network == '1': 
+        my_host = "172.1.0"
+        break
+    elif state_network == '2':
+        my_host = '172.99.255.255'
+        break
+    else:
+        time.sleep(0.0001)
+        pass
+
 while 1:#so the program will run forever
 
     print(bcolors.UNDERLINE+bcolors.HEADER+"Client started, listening for offer requests..."+bcolors.ENDC)
@@ -22,7 +35,7 @@ while 1:#so the program will run forever
         try:     
             client = socket(AF_INET, SOCK_DGRAM) # UDP
             client.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-            client.bind(("172.99.255.255", 13117))
+            client.bind((my_host, 13117))
             data, addr = client.recvfrom(2048)
             client.close()
             (cookie, mytype, port) = struct.unpack('!IBH', data) #get the port from the broadcast message
@@ -73,4 +86,4 @@ while 1:#so the program will run forever
     except:
         time.sleep(1)
         pass
-    
+   
