@@ -9,21 +9,22 @@ while 1:
         my_ip= gethostbyname(gethostname())
         print("Server started, listening on IP address " + my_ip)
         while 1:
-                try:
-                    serverPort = 12000
-                    serverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
-                    serverSocket.bind(('', serverPort))
-                    global broadcast
-                    broadcast = None
-                    broadcast = struct.pack('!IBH',0xfeedbeef,0x2,serverPort)
-                    serverSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-                    for i in range (0, 10):
-                        serverSocket.sendto(broadcast, ('172.1.0', 13117))
-                        time.sleep(1)
-                    #serverSocket.close() 
-                    break
-                except:   
-                    pass
+            try:
+                serverPort = 12000
+                serverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
+                serverSocket.bind(('', serverPort))
+                global broadcast
+                broadcast = None
+                broadcast = struct.pack('!IBH',0xfeedbeef,0x2,serverPort)
+                serverSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+                for i in range (0, 10):
+                    serverSocket.sendto(broadcast, ('172.1.0', 13117))
+                    time.sleep(1)
+                #serverSocket.close() 
+                break
+            except:  
+                time.sleep(1) 
+                pass
     try:
         global counter_group1 
         global counter_group2 
@@ -56,6 +57,7 @@ while 1:
                         counter_group2 += 1
                         lock_2.release()  
             except:
+                time.sleep(1) 
                 pass
 
         def TCP_thread():
@@ -76,6 +78,7 @@ while 1:
                     groups[conn] = conn.recv(1024).decode()
                     list_conn.append(conn)
                 except:
+                    time.sleep(1) 
                     pass
             
             if len(list_conn) == 0:
@@ -126,4 +129,5 @@ while 1:
         tcp_th.join()
         udp_th.join()
     except:
+        time.sleep(1) 
         pass
