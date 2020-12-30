@@ -22,7 +22,7 @@ while 1:#so the program will run forever
         try:     
             client = socket(AF_INET, SOCK_DGRAM) # UDP
             client.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-            client.bind(("", 13117))
+            client.bind(("172.99.255.255", 13117))
             data, addr = client.recvfrom(2048)
             client.close()
             (cookie, mytype, port) = struct.unpack('!IBH', data) #get the port from the broadcast message
