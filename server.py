@@ -4,11 +4,24 @@ import time
 import struct
 import random
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+record = 0
+
 while 1: #so the program will run forever
     time.sleep(1)
     def UDP_thread():
         my_ip= gethostbyname(gethostname())
-        print("Server started, listening on IP address " + my_ip)
+        print(bcolors.UNDERLINE+bcolors.HEADER+ "Server started, listening on IP address " + my_ip+bcolors.ENDC)
         while 1:
             try:
                 serverPort = 12000
@@ -106,30 +119,48 @@ while 1: #so the program will run forever
                 
                 time.sleep(10)
                 #result of the game - winner / loser / tie
-                ret = ""
-                list_win = ""
-                if counter_group1 == counter_group2:
-                    ret = "Tie!"
-                    list_win = print_list(group_1, groups)+ print_list(group_2,groups)
-                elif counter_group1 > counter_group2:
-                    ret = "Group 1 wins!"
-                    list_win = print_list(group_1,groups)
+                if len(group_2) != 0:
+                    ret = ""
+                    list_win = ""
+                    if counter_group1 == counter_group2:
+                        ret = "Tie!"
+                        list_win = print_list(group_1, groups)+ print_list(group_2,groups)
+                        global record
+                        if counter_group1 > record:
+                            record = counter_group1
+                    elif counter_group1 > counter_group2:
+                        ret = "Group 1 wins!"
+                        list_win = print_list(group_1,groups)
+                        if counter_group1 > record:
+                            record = counter_group1
+                    else:
+                        ret = "Group 2 wins!"
+                        list_win = print_list(group_2,groups)
+                        if counter_group2 > record:
+                            record = counter_group2
+                    avg_group1 = counter_group1/10
+                    avg_group2 = counter_group2/10
+                    massege_game_over_1 = "Game over!\nGroup 1 typed in "+str(counter_group1)+" characters. Group 2 typed in "+str(counter_group2)+" characters.\n"+ret+"\n\nCongratulations to the winners:\n==\n"+list_win
+                    massege_game_over_2 = "\nStatistical data:\nGroup 1 typed in "+str(avg_group1)+" about every second\nGroup 2 typed in "+str(avg_group2)+" about every second"
+                    massege_game_over_3 = "\nThe record for now: "+ str(record)
+                    massege_game_over = massege_game_over_1+massege_game_over_2+massege_game_over_3
                 else:
-                    ret = "Group 2 wins!"
-                    list_win = print_list(group_2,groups)
+                    if counter_group1 > record:
+                        record = counter_group1
+                    avg_group1 = counter_group1/10
+                    massege_game_over = "Game over! you played alone and you typed in "+str(counter_group1)+" characters.\nTyped in "+str(avg_group1)+" about every second!\nThe record for now: "+ str(record)
 
-                massege_game_over = "Game over!\nGroup 1 typed in "+str(counter_group1)+" characters. Group 2 typed in "+str(counter_group2)+" characters.\n"+ret+"\n\nCongratulations to the winners:\n==\n"+list_win
                 for i in range(0,count_conn): #send message with the result of the game and then end the connection
-                    list_conn[i].send(massege_game_over.encode())
                     try:
+                        list_conn[i].send(massege_game_over.encode())
                         list_conn[i].close()
                     except:
                         pass
 
-            print(massege_game_over)
+            print(bcolors.OKBLUE+massege_game_over+bcolors.ENDC)
         #create the threads and run them
         tcp_th = threading.Thread(target=TCP_thread, args=())           
-        udp_th = threading.Thread(target=UDP_thread, args=())    
+        udp_th = threading.Thread(target=UDP_thread, args=())   
         tcp_th.start()
         udp_th.start()
         tcp_th.join()
