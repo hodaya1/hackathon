@@ -3,6 +3,9 @@ from socket import *
 import time
 import struct
 import random
+import sys
+from scapy.all import get_if_addr
+import ipaddress
 
 class bcolors:
     HEADER = '\033[95m'
@@ -15,12 +18,15 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+#my_ip = get_if_eddr("eth1") 
+my_ip = get_if_addr("eth2") 
+
 record = 0
 
 while 1: #so the program will run forever
     time.sleep(1)
     def UDP_thread():
-        my_ip= gethostbyname(gethostname())
+        #my_ip= gethostbyname(gethostname())
         print(bcolors.UNDERLINE+bcolors.HEADER+ "Server started, listening on IP address " + my_ip+bcolors.ENDC)
         while 1:
             try:
@@ -30,7 +36,7 @@ while 1: #so the program will run forever
                 broadcast = struct.pack('!IBH',0xfeedbeef,0x2,serverPort) #broadcast with ip over udp 
                 serverSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
                 for i in range (0, 10):
-                    serverSocket.sendto(broadcast, ('172.1.0', 13117))
+                    serverSocket.sendto(broadcast, ('172.99.255.255', 13117))
                     time.sleep(1)
                 break
             except:  
@@ -73,7 +79,7 @@ while 1: #so the program will run forever
                 pass
 
         def TCP_thread():
-            my_ip= gethostbyname(gethostname())
+            #my_ip= gethostbyname(gethostname())
             serverPort = 12000
             tcpServer = socket(AF_INET, SOCK_STREAM) 
             tcpServer.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) 
