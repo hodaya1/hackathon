@@ -18,8 +18,20 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-#my_ip = get_if_eddr("eth1") 
-my_ip = get_if_addr("eth2") 
+while 1:
+    time.sleep(0.0001)
+    state_network = input("plese enter 1 if you want eth1 or 2 for eth2\n")
+    if state_network == '1':
+        my_ip = get_if_addr("eth1") 
+        my_host = '172.1.0'
+        break
+    elif state_network == '2':
+        my_ip = get_if_addr("eth2") 
+        my_host = '172.99.255.255'
+        break
+    else:
+        time.sleep(0.0001)
+        pass
 
 record = 0
 
@@ -36,7 +48,7 @@ while 1: #so the program will run forever
                 broadcast = struct.pack('!IBH',0xfeedbeef,0x2,serverPort) #broadcast with ip over udp 
                 serverSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
                 for i in range (0, 10):
-                    serverSocket.sendto(broadcast, ('172.99.255.255', 13117))
+                    serverSocket.sendto(broadcast, (my_host, 13117))
                     time.sleep(1)
                 break
             except:  
