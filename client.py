@@ -43,7 +43,6 @@ while 1:
                 while time.time()<ten_seconds: 
                     ch = getch.getch().encode()
                     if run_:
-                        print("hi")
                         socket_tcp.send(ch)
             except:
                 pass
