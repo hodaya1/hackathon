@@ -18,7 +18,7 @@ while 1:
                     broadcast = struct.pack('!IBH',0xfeedbeef,0x2,serverPort)
                     serverSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
                     for i in range (0, 10):
-                        serverSocket.sendto(broadcast, (17210, 13117))
+                        serverSocket.sendto(broadcast, ('172.1.0', 13117))
                         time.sleep(1)
                     #serverSocket.close() 
                     break
