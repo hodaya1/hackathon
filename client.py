@@ -4,10 +4,20 @@ import time
 import getch
 import threading
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 while 1:#so the program will run forever
 
-    print("Client started, listening for offer requests...")
+    print(bcolors.UNDERLINE+bcolors.HEADER+"Client started, listening for offer requests..."+bcolors.ENDC)
     while 1:
         try:     
             client = socket(AF_INET, SOCK_DGRAM) # UDP
@@ -22,7 +32,7 @@ while 1:#so the program will run forever
         except:
             time.sleep(1)
             pass    
-    print( "Received offer from " +  addr[0] + " attempting to connect...")
+    print( bcolors.OKGREEN+"Received offer from " +  addr[0] + " attempting to connect..."+bcolors.ENDC)
 
     try:
         host = addr[0]
@@ -44,7 +54,7 @@ while 1:#so the program will run forever
                 pass
 
         data = tcpClient.recv(1024)
-        print(data.decode())
+        print(bcolors.OKCYAN+data.decode()+bcolors.ENDC)
 
         game_th = threading.Thread(target=press_keys, args=(tcpClient,)) #create thread for the game so just when the game start it will send chars
 
@@ -54,12 +64,12 @@ while 1:#so the program will run forever
             game_over = tcpClient.recv(1024) #get a message about the result of the game
             run_ = False
             game_th.join()
-            print(game_over.decode())
+            print(bcolors.OKBLUE+game_over.decode()+bcolors.ENDC)
         except:
             run_ = False
             game_th.join()
 
-        print("server disconnected, listening for offer request...")
+        print(bcolors.WARNING+"server disconnected, listening for offer request..."+bcolors.ENDC)
     except:
         time.sleep(1)
         pass
